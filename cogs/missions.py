@@ -56,3 +56,4 @@ class Missions(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(Missions(bot))
+    print("Missions cog loaded")

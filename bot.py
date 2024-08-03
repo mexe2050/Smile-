@@ -1,5 +1,4 @@
 import os
-import asyncio
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
@@ -30,11 +29,12 @@ async def on_ready():
 @bot.event
 async def setup_hook():
     for extension in initial_extensions:
-        try:
-            await bot.load_extension(extension)
-            print(f'Loaded extension: {extension}')
-        except Exception as e:
-            print(f'Failed to load extension {extension}: {e}')
+        if extension not in bot.extensions:
+            try:
+                await bot.load_extension(extension)
+                print(f'Loaded extension: {extension}')
+            except Exception as e:
+                print(f'Failed to load extension {extension}: {e}')
 
 @bot.command()
 @commands.is_owner()
@@ -49,9 +49,5 @@ async def reload(ctx, extension):
 async def ping(ctx):
     await ctx.send(f'Pong! Latency: {round(bot.latency * 1000)}ms')
 
-async def main():
-    async with bot:
-        await bot.start(TOKEN)
-
 if __name__ == "__main__":
-    asyncio.run(main())
+    bot.run(TOKEN)
