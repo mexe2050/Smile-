@@ -25,10 +25,7 @@ jobs:
     - name: Create .env file
       run: |
         echo "DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }}" > .env
-    
-    - name: Create config file
-      run: |
-        echo '{}' > config.json
+        echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
     
     - name: Run bot
       run: python bot.py

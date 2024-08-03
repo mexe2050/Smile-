@@ -7,7 +7,10 @@ from discord.ext import commands
 # Load environment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
+MONGO_URI = os.getenv('MONGO_URI')
+
 print(f"Token loaded: {'YES' if TOKEN else 'NO'}")
+print(f"MongoDB URI loaded: {'YES' if MONGO_URI else 'NO'}")
 
 # Bot setup
 intents = discord.Intents.default()

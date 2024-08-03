@@ -16,7 +16,7 @@ class Ranking(commands.Cog):
         if not top_users:
             await ctx.send("No users ranked yet.")
             return
-        top_10 = "\n".join([f"{i+1}. <@{id}>: {points} points" for i, (id, points) in enumerate(top_users)])
+        top_10 = "\n".join([f"{i+1}. <@{user['_id']}>: {user['points']} points" for i, user in enumerate(top_users)])
         await ctx.send(f"Top 10 Users:\n{top_10}")
 
 async def setup(bot):
