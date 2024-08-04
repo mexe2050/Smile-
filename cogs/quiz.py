@@ -10,10 +10,15 @@ class Quiz(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def add_quiz_question(self, ctx, question: str, answer: str, points: int):
-        """Add a new quiz question."""
-        add_question(question, answer, points)
-        await ctx.send(f"Question added successfully: {question}")
+    async def add_quiz_question(self, ctx, *, data: str):
+        """Add a new quiz question. Usage: !add_quiz_question question | answer | points"""
+        try:
+            question, answer, points = [item.strip() for item in data.split('|')]
+            points = int(points)
+            add_question(question, answer, points)
+            await ctx.send(f"Question added successfully: {question}")
+        except ValueError:
+            await ctx.send("Invalid format. Use: !add_quiz_question question | answer | points")
 
     @commands.command()
     @commands.has_permissions(administrator=True)
@@ -69,13 +74,14 @@ class Quiz(commands.Cog):
         question_list = "\n".join([f"{i}. {q['question']} (Answer: {q['answer']}, Points: {q['points']})" for i, q in enumerate(questions)])
         await ctx.send(f"Quiz Questions:\n{question_list}")
 
-    @add_quiz_question.error
-    @remove_quiz_question.error
-    @quiz.error
-    @list_questions.error
-    async def quiz_error(self, ctx, error):
-        if isinstance(error, commands.MissingRequiredArgument):
+    @commands.Cog.listener()
+    async def on_command_error(self, ctx, error):
+        if isinstance(error, commands.CommandNotFound):
+            await ctx.send("Command not found. Use '!help' to see available commands.")
+        elif isinstance(error, commands.MissingRequiredArgument):
             await ctx.send(f"Missing required argument. Please check the command usage with '!help {ctx.command.name}'")
+        elif isinstance(error, commands.BadArgument):
+            await ctx.send("Invalid argument provided. Please check the command usage.")
         elif isinstance(error, commands.MissingPermissions):
             await ctx.send("You don't have the required permissions to use this command.")
         else:
