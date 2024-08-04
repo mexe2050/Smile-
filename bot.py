@@ -2,21 +2,15 @@ import os
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
-from pymongo import MongoClient
 
 # Load environment variables
 load_dotenv()
 TOKEN = os.getenv('DISCORD_TOKEN')
-MONGO_URI = os.getenv('MONGO_URI')
 
 # Bot setup
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
-
-# MongoDB setup
-client = MongoClient(MONGO_URI)
-db = client['mohamed051']
 
 # Cog setup
 initial_extensions = ['cogs.ranking', 'cogs.quiz', 'cogs.missions', 'cogs.achievements']

@@ -31,21 +31,14 @@ class Quiz(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(administrator=True)
-    async def quiz(self, ctx, index: int = None):
-        """Start a quiz with a specific question or a random one."""
+    async def quiz(self, ctx):
+        """Start a quiz with a random question."""
         questions = get_all_questions()
         if not questions:
             await ctx.send("No questions available. Please add some questions first!")
             return
 
-        if index is None:
-            question = random.choice(questions)
-        elif 0 <= index < len(questions):
-            question = questions[index]
-        else:
-            await ctx.send("Invalid question index.")
-            return
-
+        question = random.choice(questions)
         await ctx.send(f"Quiz time! Question: {question['question']}")
        
         def check(m):
@@ -73,20 +66,6 @@ class Quiz(commands.Cog):
 
         question_list = "\n".join([f"{i}. {q['question']} (Answer: {q['answer']}, Points: {q['points']})" for i, q in enumerate(questions)])
         await ctx.send(f"Quiz Questions:\n{question_list}")
-
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if isinstance(error, commands.CommandNotFound):
-            await ctx.send("Command not found. Use '!help' to see available commands.")
-        elif isinstance(error, commands.MissingRequiredArgument):
-            await ctx.send(f"Missing required argument. Please check the command usage with '!help {ctx.command.name}'")
-        elif isinstance(error, commands.BadArgument):
-            await ctx.send("Invalid argument provided. Please check the command usage.")
-        elif isinstance(error, commands.MissingPermissions):
-            await ctx.send("You don't have the required permissions to use this command.")
-        else:
-            await ctx.send(f"An error occurred: {type(error).__name__}")
-            print(f"An error occurred in {ctx.command.name}: {str(error)}")
 
 async def setup(bot):
     await bot.add_cog(Quiz(bot))

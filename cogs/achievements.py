@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from utils.database import update_points, get_user_achievements, add_achievement
+from utils.database import get_user_achievements, add_achievement, update_points
 
 class Achievements(commands.Cog):
     def __init__(self, bot):
@@ -45,6 +45,7 @@ class Achievements(commands.Cog):
 
     @commands.command()
     async def achievements(self, ctx):
+        """Display user's achievements."""
         user_achievements = get_user_achievements(ctx.author.id)
         user_achievement_ids = [a['id'] for a in user_achievements]
 
