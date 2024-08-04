@@ -15,7 +15,7 @@ intents.message_content = True
 bot = commands.Bot(command_prefix='!', intents=intents)
 
 # Cog setup
-initial_extensions = ['cogs.ranking', 'cogs.quiz', 'cogs.missions']
+initial_extensions = ['cogs.ranking', 'cogs.quiz', 'cogs.missions', 'cogs.achievements']
 
 @bot.event
 async def on_ready():

@@ -10,6 +10,7 @@ db = client['mohamed051']
 users = db['users']
 missions = db['missions']
 questions = db['questions']
+achievements = db['achievements']
 
 def update_points(user_id, points):
     print(f"Updating points for user {user_id}: {points}")
@@ -66,3 +67,33 @@ def remove_question(index):
         questions.delete_one({'_id': question_to_remove['_id']})
         return True
     return False
+
+def get_user_achievements(user_id):
+    print(f"Getting achievements for user {user_id}")
+    user = users.find_one({'_id': user_id})
+    return user.get('achievements', []) if user else []
+
+def add_achievement(user_id, achievement_id, achievement_type):
+    print(f"Adding achievement {achievement_id} for user {user_id}")
+    users.update_one(
+        {'_id': user_id},
+        {'$addToSet': {'achievements': {'id': achievement_id, 'type': achievement_type}}},
+        upsert=True
+    )
+
+def get_user_message_count(user_id):
+    print(f"Getting message count for user {user_id}")
+    user = users.find_one({'_id': user_id})
+    return user.get('message_count', 0) if user else 0
+
+def increment_user_message_count(user_id):
+    print(f"Incrementing message count for user {user_id}")
+    users.update_one({'_id': user_id}, {'$inc': {'message_count': 1}}, upsert=True)
+
+def reset_database():
+    print("Resetting database")
+    users.delete_many({})
+    missions.delete_many({})
+    questions.delete_many({})
+    achievements.delete_many({})
+    print("Database reset complete")
