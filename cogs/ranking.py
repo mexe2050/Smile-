@@ -1,3 +1,4 @@
+import discord
 from discord.ext import commands
 from utils.database import get_user_points, get_top_users
 
@@ -7,9 +8,11 @@ class Ranking(commands.Cog):
 
     @commands.command()
     async def rank(self, ctx):
-        print(f"Rank command called by {ctx.author}")
+        print(f"Rank command called by {ctx.author} (ID: {ctx.author.id})")
         points, rank = get_user_points(ctx.author.id)
+        print(f"Retrieved points: {points}, rank: {rank}")
         await ctx.send(f"{ctx.author.mention}, you have {points} points and are ranked #{rank}.")
+        print("Rank command response sent")
 
     @commands.command()
     async def top10(self, ctx):

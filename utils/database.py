@@ -18,8 +18,10 @@ def update_points(user_id, points):
 def get_user_points(user_id):
     print(f"Getting points for user {user_id}")
     user = users.find_one({'_id': user_id})
+    print(f"User data retrieved: {user}")
     points = user['points'] if user and 'points' in user else 0
     rank = users.count_documents({'points': {'$gt': points}}) + 1
+    print(f"Calculated points: {points}, rank: {rank}")
     return points, rank
 
 def get_top_users(limit):

@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 import discord
 from discord.ext import commands
+from pymongo import MongoClient
 
 # Load environment variables
 load_dotenv()
@@ -10,6 +11,15 @@ MONGO_URI = os.getenv('MONGO_URI')
 
 print(f"Token loaded: {'YES' if TOKEN else 'NO'}")
 print(f"MongoDB URI loaded: {'YES' if MONGO_URI else 'NO'}")
+
+# Test MongoDB connection
+try:
+    client = MongoClient(MONGO_URI)
+    client.server_info()
+    print("Successfully connected to MongoDB")
+except Exception as e:
+    print(f"Failed to connect to MongoDB: {e}")
+    exit(1)
 
 # Bot setup
 intents = discord.Intents.default()
@@ -48,6 +58,11 @@ async def reload(ctx, extension):
 @bot.command()
 async def ping(ctx):
     await ctx.send(f'Pong! Latency: {round(bot.latency * 1000)}ms')
+
+@bot.event
+async def on_command_error(ctx, error):
+    print(f"An error occurred: {type(error).__name__}: {str(error)}")
+    await ctx.send(f"An error occurred: {type(error).__name__}")
 
 if __name__ == "__main__":
     bot.run(TOKEN)
