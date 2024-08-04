@@ -41,27 +41,10 @@ class Quiz(commands.Cog):
     @commands.command()
     @commands.has_permissions(administrator=True)
     async def quiz(self, ctx, index: int):
-        if ctx.channel.id != self.quiz_channel_id:
-            await ctx.send("This command can only be used in the designated quiz channel.")
-            return
         questions = get_all_questions()
         if 0 <= index < len(questions):
             question = questions[index]
             await ctx.send(f"Quiz time! Question: {question['question']}")
            
             def check(m):
-                return m.channel == ctx.channel and m.content.lower() == question['answer'].lower()
-           
-            try:
-                msg = await self.bot.wait_for('message', check=check, timeout=30.0)
-            except asyncio.TimeoutError:
-                await ctx.send(f"Time's up! The correct answer was {question['answer']}.")
-            else:
-                update_points(msg.author.id, question['points'])
-                await ctx.send(f'{msg.author.mention} got it right! You earned {question["points"]} points.')
-        else:
-            await ctx.send("Invalid question index.")
-
-async def setup(bot):
-    await bot.add_cog(Quiz(bot))
-    print("Quiz cog loaded")
+                return m.channel == ctx.channel and m.content.lower() == quest

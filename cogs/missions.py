@@ -20,15 +20,13 @@ class Missions(commands.Cog):
         await ctx.send(f"Mission added: {description} - {points} points")
 
     @commands.command()
+    @commands.has_permissions(administrator=True)
     async def daily_missions(self, ctx):
-        if ctx.channel.id != self.missions_channel_id:
-            await ctx.send("This command can only be used in the designated missions channel.")
-            return
         missions = get_all_missions()
         if not missions:
-            await ctx.send("No missions available. Ask an admin to add some!")
+            await ctx.send("No missions available. Add some missions first!")
             return
-        missions_text = "\n".join([f"{m['description']} - {m['points']} points" for m in missions])
+        missions_text = "\n".join([f"{i}. {m['description']} - {m['points']} points" for i, m in enumerate(missions)])
         await ctx.send(f"Daily Missions:\n{missions_text}")
 
     @commands.command()
@@ -53,6 +51,11 @@ class Missions(commands.Cog):
             await ctx.send(f"{user.mention} has completed the mission: {mission['description']} and earned {mission['points']} points!")
         else:
             await ctx.send(f"{user.mention} has already completed this mission.")
+
+    @complete_mission.error
+    async def complete_mission_error(self, ctx, error):
+        if isinstance(error, commands.MissingRequiredArgument):
+            await ctx.send("Error: Missing required argument. Usage: !complete_mission <@user> <mission_index>")
 
 async def setup(bot):
     await bot.add_cog(Missions(bot))
