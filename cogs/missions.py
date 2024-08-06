@@ -10,13 +10,18 @@ class Missions(commands.Cog):
     @commands.has_permissions(administrator=True)
     async def add_mission(self, ctx, *, data: str):
         """Add a new mission. Usage: !add_mission description | points"""
+        parts = [part.strip() for part in data.split('|')]
+        if len(parts) != 2:
+            await ctx.send("Invalid format. Use: !add_mission description | points")
+            return
+        
+        description, points = parts
         try:
-            description, points = [item.strip() for item in data.split('|')]
             points = int(points)
             add_mission(description, points)
             await ctx.send(f"Mission added: {description} - {points} points")
         except ValueError:
-            await ctx.send("Invalid format. Use: !add_mission description | points")
+            await ctx.send("Invalid points value. Please use a number.")
 
     @commands.command()
     async def missions(self, ctx):
@@ -43,8 +48,8 @@ class Missions(commands.Cog):
     async def complete_mission(self, ctx, user: discord.Member, mission_index: int):
         """Mark a mission as completed for a user."""
         missions = get_all_missions()
-        if 0 <= mission_index < len(missions):
-            mission = missions[mission_index]
+        if 1 <= mission_index <= len(missions):
+            mission = missions[mission_index - 1]
             if complete_mission(user.id, mission):
                 update_points(user.id, mission['points'])
                 await ctx.send(f"{user.mention} has completed the mission: {mission['description']} and earned {mission['points']} points!")

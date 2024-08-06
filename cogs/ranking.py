@@ -8,11 +8,13 @@ class Ranking(commands.Cog):
 
     @commands.command()
     async def rank(self, ctx):
+        """Check your current rank and points."""
         points, rank = get_user_points(ctx.author.id)
         await ctx.send(f"{ctx.author.mention}, you have {points} points and are ranked #{rank}.")
 
     @commands.command()
     async def top10(self, ctx):
+        """Display the top 10 users by points."""
         top_users = get_top_users(10)
         if not top_users:
             await ctx.send("No users ranked yet.")

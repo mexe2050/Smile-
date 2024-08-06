@@ -36,7 +36,7 @@ async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandNotFound):
         await ctx.send("Command not found. Use '!help' to see available commands.")
     elif isinstance(error, commands.MissingRequiredArgument):
-        await ctx.send(f"Missing required argument. Please check the command usage with '!help {ctx.command.name}'")
+        await ctx.send(f"Missing required argument. Usage: {ctx.prefix}{ctx.command.name} {ctx.command.signature}")
     elif isinstance(error, commands.BadArgument):
         await ctx.send("Invalid argument provided. Please check the command usage.")
     elif isinstance(error, commands.MissingPermissions):
